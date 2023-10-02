@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Stores</string>
+    <string name="descripction_image_photo">imagen del cardview</string>
+    <string name="descripction_note_add">crear nota</string>
+</resources>
