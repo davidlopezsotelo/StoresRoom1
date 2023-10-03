@@ -5,17 +5,17 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
+import com.davidlopez.stores.databinding.FragmentEditNotaBinding
 
 class EditNotaFragment : Fragment() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
+
+    private lateinit var mBinding: FragmentEditNotaBinding
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_edit_nota, container, false)
+        savedInstanceState: Bundle?): View? {
+        mBinding= FragmentEditNotaBinding.inflate(inflater,container,false)
+
+        return mBinding.root
     }
 }
