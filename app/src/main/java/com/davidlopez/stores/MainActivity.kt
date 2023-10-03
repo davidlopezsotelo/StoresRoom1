@@ -3,6 +3,7 @@ package com.davidlopez.stores
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.room.util.query
 import com.davidlopez.stores.databinding.ActivityMainBinding
 import java.util.concurrent.LinkedBlockingQueue
 
@@ -21,15 +22,13 @@ class MainActivity : AppCompatActivity(),OnClickListener {
         mBinding.btnSave.setOnClickListener {
 
             //creamos la nota desde el editText
-            val nota=NotasEntity(name = mBinding.etName.text.toString().trim())
+            val nota=NotasEntity(name = mBinding.etName.text.toString())
 
             //creamos un segundo hilo para la insercion de datos en la base de datos
-            Thread{
-
+            Thread {
                 //hacemos que la nota creada se inserte en la base de datos
                 NotasApp.db.notasDao().addNota(nota)
-            }
-
+            }.start()
             mAdapter.add(nota)// añadimos la nota con el adaptador
         }
         setupRecyclerView()
@@ -38,7 +37,7 @@ class MainActivity : AppCompatActivity(),OnClickListener {
 
     private fun setupRecyclerView() {
         mAdapter= NotasAdapter(mutableListOf(),this)
-        mGridLayout= GridLayoutManager(this,1)//numero de elementos por columna
+        mGridLayout= GridLayoutManager(this,2)//numero de elementos por columna
         getNotas()
         mBinding.reciclerView.apply {
             setHasFixedSize(true)
@@ -71,5 +70,32 @@ class MainActivity : AppCompatActivity(),OnClickListener {
     * */
     override fun onClick(notasEntity: NotasEntity) {
 
+    }
+
+    //actualizar registro
+    override fun onFavoriteNota(notasEntity: NotasEntity) {
+        notasEntity.isFaborite=!notasEntity.isFaborite
+
+        val queue=LinkedBlockingQueue<NotasEntity>()
+
+        //insertar actualizacion en base de datos
+        Thread{
+            NotasApp.db.notasDao().updateNota(notasEntity)
+            queue.add(notasEntity)
+        }.start()
+        mAdapter.update(queue.take())
+    }
+
+    //borrar registro
+
+    override fun onDeleteNota(notasEntity: NotasEntity) {
+
+        val queue=LinkedBlockingQueue<NotasEntity>()
+
+        Thread{
+            NotasApp.db.notasDao().deleteAll(notasEntity)
+            queue.add(notasEntity)
+        }.start()
+        mAdapter.delete(queue.take())
     }
 }

@@ -25,16 +25,16 @@ class NotasAdapter(private var notas:MutableList<NotasEntity>, private var liste
         val notas=notas.get(position)
 
         with(holder){
-
             setListener(notas)
             binding.tvName.text=notas.name
+            binding.cbNotas.isChecked=notas.isFaborite
         }
 
     }
 
     fun add(nota: NotasEntity) {
         notas.add(nota)
-        notifyDataSetChanged()//refrecara la vista del adaptador
+        notifyDataSetChanged()
     }
 
     fun setNotas(notas: MutableList<NotasEntity>) {
@@ -42,11 +42,41 @@ class NotasAdapter(private var notas:MutableList<NotasEntity>, private var liste
         notifyDataSetChanged()
     }
 
+    fun update(notasEntity: NotasEntity) {
+        val index=notas.indexOf(notasEntity)
+        if (index!=-1){
+            notas.set(index,notasEntity)
+            notifyItemChanged(index)
+        }
+    }
+
+    fun delete(notasEntity: NotasEntity) {
+        val index=notas.indexOf(notasEntity)
+        if (index!=-1){
+            notas.removeAt(index)
+            notifyItemRemoved(index)
+        }
+    }
+
     inner class ViewHolder(view: View):RecyclerView.ViewHolder(view){
         val binding=ItemStoreBinding.bind(view)
 
         fun setListener(notasEntity: NotasEntity){
-            binding.root.setOnClickListener { listener.onClick(notasEntity) }
+
+            with(binding.root) {
+                setOnClickListener { listener.onClick(notasEntity) }
+
+                //TODO CAMBIAR PARA MENU TOAST CON OPCION BORRAR O ENVIAR
+                setOnLongClickListener {
+                    listener.onDeleteNota(notasEntity)
+                    true
+                }
+            }
+
+            binding.cbNotas.setOnClickListener { listener.onFavoriteNota(notasEntity) }
+
+
+
         }
 
     }
