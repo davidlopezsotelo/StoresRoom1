@@ -3,7 +3,6 @@ package com.davidlopez.stores
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.room.util.query
 import com.davidlopez.stores.databinding.ActivityMainBinding
 import java.util.concurrent.LinkedBlockingQueue
 
@@ -111,13 +110,13 @@ class MainActivity : AppCompatActivity(),OnClickListener,MainAux {
 
     //borrar registro
 
-    override fun onDeleteNota(notasEntity: NotasEntity) {
+    override fun onDeleteNota(notasDB: NotasEntity) {
 
         val queue=LinkedBlockingQueue<NotasEntity>()
 
         Thread{
-            NotasApp.db.notasDao().deleteAll(notasEntity)
-            queue.add(notasEntity)
+            NotasApp.db.notasDao().deleteAll(notasDB)
+            queue.add(notasDB)
         }.start()
         mAdapter.delete(queue.take())
     }
@@ -129,3 +128,5 @@ class MainActivity : AppCompatActivity(),OnClickListener,MainAux {
        if (isVisible)mBinding.fab.show() else mBinding.fab.hide()
     }
 }
+
+//nuevo comit
