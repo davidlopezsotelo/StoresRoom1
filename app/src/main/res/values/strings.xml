@@ -6,4 +6,9 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="hint_name">nombre de la nota</string>
     <string name="helper_required">requerido</string>
+    <string name="hint_phone">Telefono</string>
+    <string name="hint_photo_url">url de la imagen</string>
+    <string name="edit_title_add">Crear Contacto</string>
+    <string name="menu_save">Guardar</string>
+    <string name="edit_message_save_sucess">Contacto agregado.</string>
 </resources>

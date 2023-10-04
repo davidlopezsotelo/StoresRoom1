@@ -7,7 +7,7 @@ import androidx.room.util.query
 import com.davidlopez.stores.databinding.ActivityMainBinding
 import java.util.concurrent.LinkedBlockingQueue
 
-class MainActivity : AppCompatActivity(),OnClickListener {
+class MainActivity : AppCompatActivity(),OnClickListener,MainAux {
 
     private lateinit var mBinding: ActivityMainBinding
     private lateinit var mAdapter: NotasAdapter
@@ -19,10 +19,14 @@ class MainActivity : AppCompatActivity(),OnClickListener {
         mBinding= ActivityMainBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
 
+
+//NOTAS--------------------------------------------------------------------------------------------
         mBinding.btnSave.setOnClickListener {
 
             //creamos la nota desde el editText
             val nota=NotasEntity(name = mBinding.etName.text.toString())
+
+//INSERTAR EN BASE DE DATOS-----------------------------------------------------------------------
 
             //creamos un segundo hilo para la insercion de datos en la base de datos
             Thread {
@@ -31,8 +35,27 @@ class MainActivity : AppCompatActivity(),OnClickListener {
             }.start()
             mAdapter.add(nota)// añadimos la nota con el adaptador
         }
-        setupRecyclerView()
 
+//FRAGMET------------------------------------------------------------------------------------------
+        //creamos el componente para añadir contactos desde el fragment
+        mBinding.fab.setOnClickListener { launchEditFragment() }//creamos esta funcion en el main
+
+        setupRecyclerView()
+    }
+    private fun launchEditFragment() {
+        // creamos una instancia al fragment
+        val fragment=EditContactFragment()
+        val fragmentManager =supportFragmentManager
+        val fragmentTransaction=fragmentManager.beginTransaction()
+
+        fragmentTransaction.add(R.id.containerMain,fragment)
+        fragmentTransaction.commit()
+        //retroceder al pulsar el boton atras
+        fragmentTransaction.addToBackStack(null)
+
+        // ocultamos el boton despues de pulsarlo
+        //mBinding.fab.hide()
+        hideFab()//este metodo lo oculta y lo vuelve a mostrar al pulsar atras
     }
 
     private fun setupRecyclerView() {
@@ -97,5 +120,12 @@ class MainActivity : AppCompatActivity(),OnClickListener {
             queue.add(notasEntity)
         }.start()
         mAdapter.delete(queue.take())
+    }
+
+    /*
+    * MainAux
+    * */
+    override fun hideFab(isVisible: Boolean) {
+       if (isVisible)mBinding.fab.show() else mBinding.fab.hide()
     }
 }
