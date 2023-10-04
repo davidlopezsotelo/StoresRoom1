@@ -1,5 +1,7 @@
 package com.davidlopez.stores
 
+import android.content.Context
+import android.inputmethodservice.InputMethodService
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -8,8 +10,10 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import com.davidlopez.stores.databinding.FragmentEditNotaBinding
 import com.google.android.material.snackbar.Snackbar
+import java.util.concurrent.LinkedBlockingQueue
 
 class EditContactFragment : Fragment() {
 
@@ -51,21 +55,56 @@ class EditContactFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when(item.itemId){
             android.R.id.home -> {
-                mActivity?.onBackPressed()
+                mActivity?.onBackPressedDispatcher?.onBackPressed()//ir hacia atras con el boton??revisar
                 true
             }
+
+            // guardar en la base de datos---------------------------------------------------------
             R.id.action_save -> {
-                Snackbar.make(mBinding.root,
-                    getString(R.string.edit_message_save_sucess),
-                    Snackbar.LENGTH_SHORT).show()
+                //cambiar entity a contactosEntity*************
+
+                val contacto=NotasEntity(name = mBinding.etName.text.toString().trim())
+
+                val queue =LinkedBlockingQueue<Long?>()
+                Thread{
+                    hideKeyboard()//para ocultar el teclado
+                    val id =NotasApp.db.notasDao().addNota(contacto)// añadir id al contacto para poder ser actualizado
+                    queue.add(id)
+                }.start()
+
+                //mostrar mensaje---------------------------------
+                queue.take()?.let{
+                    Snackbar.make(mBinding.root,
+                            R.string.edit_message_save_sucess,
+                            Snackbar.LENGTH_SHORT)
+                             .show()
+                    mActivity?.onBackPressedDispatcher?.onBackPressed()
+
+                    // mostrar el nuevo contacto despues de añadirlo, al regresar a la pantalla anterior
+                    mActivity?.addContact(contacto)
+
+                }
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
-        //return super.onOptionsItemSelected(item)
+        //return super.onOptionsItemSelected(item) , se lo pasamos al else
     }
 
-    //ciclo de vida del fragment
+    //ocultar el teclado------------------------------------------------------------------------
+    // no funciona correctamente, mejorar el metodo en toda la app********
+    private fun hideKeyboard(){
+        val imm=mActivity?.getSystemService(Context.INPUT_METHOD_SERVICE)as InputMethodManager
+
+        imm.hideSoftInputFromWindow(requireView().windowToken,0)
+    }
+
+    //ciclo de vida del fragment-----------------------------------------------
+
+    override fun onDestroyView() {
+        hideKeyboard()
+        super.onDestroyView()
+    }
 
     override fun onDestroy() {
         mActivity?.supportActionBar?.setDisplayHomeAsUpEnabled(false)

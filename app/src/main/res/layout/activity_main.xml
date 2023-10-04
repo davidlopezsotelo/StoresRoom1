@@ -19,13 +19,13 @@
 
     <EditText
         android:id="@+id/etName"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/btnSave"
-        app:layout_constraintTop_toTopOf="@id/btnSave"
+        android:layout_width="301dp"
+        android:layout_height="67dp"
+        android:hint="Nombre de la nota"
         app:layout_constraintBottom_toBottomOf="@id/btnSave"
-        android:hint="Nombre de la nota"/>
+        app:layout_constraintEnd_toStartOf="@id/btnSave"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/btnSave" />
 
 
 

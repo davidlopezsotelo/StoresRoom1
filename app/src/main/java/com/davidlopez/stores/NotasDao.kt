@@ -12,8 +12,12 @@ interface NotasDao {
     @Query("SELECT * FROM NotasEntity")
     fun getAllNotas():MutableList<NotasEntity>
 
+    // para contactosEntity**********************************
+    @Query("SELECT * FROM NotasEntity where id= :id")
+    fun getContactoById(id: Long):NotasEntity
+
     @Insert
-    fun addNota(notasEntity: NotasEntity)
+    fun addNota(notasEntity: NotasEntity):Long // contactosEntity :Long
 
     @Update
     fun updateNota(notasEntity: NotasEntity)

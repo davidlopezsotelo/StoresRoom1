@@ -32,9 +32,10 @@ class NotasAdapter(private var notas:MutableList<NotasEntity>, private var liste
 
     }
 
-    fun add(nota: NotasEntity) {
-        notas.add(nota)
-        notifyDataSetChanged()
+    fun add(nota: NotasEntity) {    //REPARAR O MEJORAR??????
+        if (!notas.contains(nota))
+        {notas.add(nota)
+        notifyItemInserted(notas.size-1)}
     }
 
     fun setNotas(notas: MutableList<NotasEntity>) {

@@ -1,7 +1,9 @@
 package com.davidlopez.stores
 
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.inputmethod.InputMethodManager
 import androidx.recyclerview.widget.GridLayoutManager
 import com.davidlopez.stores.databinding.ActivityMainBinding
 import java.util.concurrent.LinkedBlockingQueue
@@ -19,6 +21,7 @@ class MainActivity : AppCompatActivity(),OnClickListener,MainAux {
         setContentView(mBinding.root)
 
 
+
 //NOTAS--------------------------------------------------------------------------------------------
         mBinding.btnSave.setOnClickListener {
 
@@ -29,6 +32,7 @@ class MainActivity : AppCompatActivity(),OnClickListener,MainAux {
 
             //creamos un segundo hilo para la insercion de datos en la base de datos
             Thread {
+
                 //hacemos que la nota creada se inserte en la base de datos
                 NotasApp.db.notasDao().addNota(nota)
             }.start()
@@ -127,6 +131,15 @@ class MainActivity : AppCompatActivity(),OnClickListener,MainAux {
     override fun hideFab(isVisible: Boolean) {
        if (isVisible)mBinding.fab.show() else mBinding.fab.hide()
     }
+
+    override fun addContact(notasEntity: NotasEntity) {
+        mAdapter.add(notasEntity)
+    }
+
+    override fun updateContact(notasEntity: NotasEntity) {
+        // añadir un
+    }
+
 }
 
 //nuevo comit
