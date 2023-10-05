@@ -11,6 +11,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import com.davidlopez.stores.databinding.FragmentEditNotaBinding
 import com.google.android.material.snackbar.Snackbar
 import java.util.concurrent.LinkedBlockingQueue
@@ -74,10 +75,7 @@ class EditContactFragment : Fragment() {
 
                 //mostrar mensaje---------------------------------
                 queue.take()?.let{
-                    Snackbar.make(mBinding.root,
-                            R.string.edit_message_save_sucess,
-                            Snackbar.LENGTH_SHORT)
-                             .show()
+                    Toast.makeText(mActivity,R.string.edit_message_save_sucess,Toast.LENGTH_SHORT).show()
                     mActivity?.onBackPressedDispatcher?.onBackPressed()
 
                     // mostrar el nuevo contacto despues de añadirlo, al regresar a la pantalla anterior

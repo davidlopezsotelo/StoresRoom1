@@ -42,9 +42,9 @@ class MainActivity : AppCompatActivity(),OnClickListener,MainAux {
 //FRAGMET------------------------------------------------------------------------------------------
         //creamos el componente para añadir contactos desde el fragment
         mBinding.fab.setOnClickListener { launchEditFragment() }//creamos esta funcion en el main
-
         setupRecyclerView()
     }
+
     private fun launchEditFragment() {
         // creamos una instancia al fragment
         val fragment=EditContactFragment()
